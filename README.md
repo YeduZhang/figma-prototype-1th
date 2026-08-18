@@ -2,7 +2,7 @@
 
 A browser-only meeting-room booking prototype for COMP90082 / MB-Koala.Can be easily use after download .
 
-It mimics a Google Calendar resource view: rooms on the left, time on the right, occupied slots in blue, your own bookings in yellow. Data stays in this browser (`localStorage`).Because its just for prototype validation, there is no server and no live Google Calendar connection,which will be completed in next sprint.
+It mimics a Google Calendar resource view: rooms on the left, time on the right, occupied slots in blue, your own bookings in yellow. Data stays in this browser (`localStorage`).Because its just for prototype validation,no backend server is implemented,so the browser cannot send booking success reminder emails via the room address on its own.but If Outlook is already signed‑in on your device, you can input another valid email address when registering an account. The web popup will auto‑generate an email pre‑filled with booking information; just click confirm to send it.
 
 ## How to open
 
@@ -15,7 +15,7 @@ start src/index.html
 
 No Node.js, npm, or login to Google is required.
 
-## Demo accounts
+## Demo accounts which already exist.
 
 | Role | Email | Password | What to show |
 | --- | --- | --- | --- |
