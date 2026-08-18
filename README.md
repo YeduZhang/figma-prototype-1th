@@ -26,7 +26,7 @@ No Node.js, npm, or login to Google is required.
 
 Admin → **Reset demo data** restores these accounts and sample bookings.
 
-## Suggested demo path
+## You can play around with it like:
 
 1. Sign in as **Alex**. Point out Room 101: yellow *Client workshop*, blue *Busy* (Sam’s booking — title hidden).
 2. Click an empty slot, book a room, add attendees, optionally choose weekly repeat. Use **Add to calendar** to download an `.ics` file (opens in Google Calendar / Outlook).
