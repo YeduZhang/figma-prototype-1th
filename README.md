@@ -36,7 +36,7 @@ Admin → **Reset demo data** restores these accounts and sample bookings.
 
 ## What this covers vs the client stories
 
-Covered in the prototype:
+Can be found in this prototype:
 
 - Register with company, name, email → admin approve / reject
 - Create password and sign in after approval
