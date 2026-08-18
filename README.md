@@ -2,7 +2,7 @@
 
 A browser-only meeting-room booking prototype for COMP90082 / MB-Koala.Can be easily use after download .
 
-It mimics a Google Calendar resource view: rooms on the left, time on the right, occupied slots in blue, your own bookings in yellow. Data stays in this browser (`localStorage`).Because its just for prototype validation, there is no server and no live Google Calendar connection,which will be completed later.
+It mimics a Google Calendar resource view: rooms on the left, time on the right, occupied slots in blue, your own bookings in yellow. Data stays in this browser (`localStorage`).Because its just for prototype validation, there is no server and no live Google Calendar connection,which will be completed in next sprint.
 
 ## How to open
 
