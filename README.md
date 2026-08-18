@@ -1,12 +1,12 @@
-# MB Rooms prototype
+# MB Rooms-Booking prototype
 
-A browser-only meeting-room booking prototype for COMP90082 / MB-Koala.
+A browser-only meeting-room booking prototype for COMP90082 / MB-Koala.Can be easily use after download .
 
 It mimics a Google Calendar resource view: rooms on the left, time on the right, occupied slots in blue, your own bookings in yellow. Data stays in this browser (`localStorage`).Because its just for prototype validation, there is no server and no live Google Calendar connection,which will be completed later.
 
 ## How to open
 
-1. Open `src/index.html` in Chrome or Edge (double-click, or right-click → Open with).
+1. Download whole doc.Open `src/index.html` in Chrome or Edge (double-click, or right-click → Open with).
 2. If the page looks unstyled, you opened the file from a context that blocked local CSS. In that case drag `index.html` onto a browser window, or from PowerShell:
 
 ```powershell
