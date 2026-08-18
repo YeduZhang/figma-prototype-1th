@@ -30,7 +30,7 @@ Admin → **Reset demo data** restores these accounts and sample bookings.
 
 1. Sign in as **Alex**. Point out Room 101: yellow *Client workshop*, blue *Busy* (Sam’s booking — title hidden).
 2. Click an empty slot, book a room, add attendees, optionally choose weekly repeat. Use **Add to calendar** to download an `.ics` file (opens in Google Calendar / Outlook).
-3. Open **Room screens**. Set preview time to 10:00 today on Room 101 — outside panel says Occupied, inside screen shows the meeting. Same record as the calendar.
+3. For **Room panels**.part.For the room‑panels part, a schematic diagram is provided on Page 2 to demonstrate the synchronization effect between the calendar and the room panels.Set preview time to 10:00 today on Room 101 — outside panel says Occupied, inside screen shows the meeting. Same record as the calendar.
 4. Sign out. Register with a **real inbox** (company, name, email). Sign in as **admin**, approve it — your mail app opens a ready-to-send approval email. Send it, then sign in as the new user, create a password, and book a room (a confirmation email draft opens the same way).
 5. As admin, open **Usage** and **Bookings** (owner + company + contact email). Delete a leftover reservation.
 
