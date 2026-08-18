@@ -53,13 +53,6 @@ Can be found in this prototype:
 - Outside panel + inside screen stay consistent with the booking record
 - Simple usage by company, user, and hour
 
-Intentionally not built (too heavy for this prototype):
-
-- Live Google Calendar API / Gmail room mailboxes (needs a Google Cloud project, OAuth consent, and a Workspace calendar for every room)
-- Real email notifications
-- Physical tablet hardware
-
-If the client later provides a Google Workspace admin account, Calendar API sync can be added as a follow-on.
 
 ## Privacy note
 
