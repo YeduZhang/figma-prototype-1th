@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var KEY = "mbkoala-booking-v1";
+  var KEY = "mbkoala-booking-v2";
   var DAY_START = 8 * 60;
   var DAY_END = 18 * 60;
   var SLOT = 30;
@@ -13,7 +13,7 @@
     authMode: "login",
     adminTab: "users",
     date: todayStr(),
-    displayRoomId: "r101",
+    displayRoomId: "r-l2-2013",
     previewTime: todayStr() + "T10:00",
     modal: null,
     toast: null,
@@ -163,15 +163,17 @@
         },
       ],
       rooms: [
-        { id: "r101", name: "Room 101", email: "room101.meetingroom@gmail.com", capacity: 8, location: "Level 1" },
-        { id: "r102", name: "Room 102", email: "room102.meetingroom@gmail.com", capacity: 12, location: "Level 1" },
-        { id: "r201", name: "Room 201", email: "room201.meetingroom@gmail.com", capacity: 6, location: "Level 2" },
-        { id: "rboard", name: "Boardroom A", email: "boardroom.a.meetingroom@gmail.com", capacity: 20, location: "Level 3" },
+        { id: "r-l1-1013", name: "291-01-1013", email: "291-01-1013-MeetingRm@unimelb.edu.au", capacity: 8, location: "Level 1" },
+        { id: "r-l1-1014", name: "291-01-1014", email: "291-01-1014-meetingrm@unimelb.edu.au", capacity: 8, location: "Level 1" },
+        { id: "r-l1-1015", name: "291-01-1015", email: "291-01-1015-meetingrm@unimelb.edu.au", capacity: 8, location: "Level 1" },
+        { id: "r-l2-2013", name: "291-2-2013", email: "291-2-2013-meetingrm@unimelb.edu.au", capacity: 8, location: "Level 2" },
+        { id: "r-l2-2014", name: "291-2-2014", email: "291-2-2014-MeetingRm@unimelb.edu.au", capacity: 8, location: "Level 2" },
+        { id: "r-l2-2015", name: "291-2-2015", email: "291-2-2015-MeetingRm@unimelb.edu.au", capacity: 8, location: "Level 2" },
       ],
       bookings: [
         {
           id: "b1",
-          roomId: "r101",
+          roomId: "r-l1-1013",
           userId: "u-alex",
           title: "Client workshop",
           attendees: ["alex@acme.com", "client@example.com"],
@@ -182,7 +184,7 @@
         },
         {
           id: "b2",
-          roomId: "r101",
+          roomId: "r-l1-1013",
           userId: "u-sam",
           title: "Sprint planning",
           attendees: ["sam@brighttech.com"],
@@ -193,7 +195,7 @@
         },
         {
           id: "b3",
-          roomId: "r201",
+          roomId: "r-l2-2013",
           userId: "u-alex",
           title: "Design review",
           attendees: ["alex@acme.com", "jamie@acme.com"],
@@ -204,7 +206,7 @@
         },
         {
           id: "b4",
-          roomId: "rboard",
+          roomId: "r-l2-2014",
           userId: "u-sam",
           title: "Weekly leadership",
           attendees: ["sam@brighttech.com", "ceo@brighttech.com"],
@@ -215,7 +217,7 @@
         },
         {
           id: "b5",
-          roomId: "rboard",
+          roomId: "r-l2-2014",
           userId: "u-sam",
           title: "Weekly leadership",
           attendees: ["sam@brighttech.com", "ceo@brighttech.com"],
@@ -226,7 +228,7 @@
         },
         {
           id: "b6",
-          roomId: "r102",
+          roomId: "r-l1-1014",
           userId: "u-alex",
           title: "Interview panel",
           attendees: ["alex@acme.com"],
@@ -378,23 +380,85 @@
     }
   }
 
+  function roomsGrouped() {
+    var levels = ["Level 1", "Level 2"];
+    var groups = [];
+    var used = {};
+    levels.forEach(function (level) {
+      var list = db.rooms.filter(function (r) {
+        return r.location === level;
+      });
+      if (list.length) {
+        groups.push({ level: level, rooms: list });
+        list.forEach(function (r) {
+          used[r.id] = true;
+        });
+      }
+    });
+    var rest = db.rooms.filter(function (r) {
+      return !used[r.id];
+    });
+    if (rest.length) groups.push({ level: "Other", rooms: rest });
+    return groups;
+  }
+
+  function renderLogo() {
+    return '<div class="logo"><img src="mec-logo.svg" alt="Melbourne Entrepreneurial Centre" /></div>';
+  }
+
+  function renderTopbar(u) {
+    if (!u) return '<div class="topbar">' + renderLogo() + "</div>";
+    var nav =
+      '<div class="nav">' +
+      '<button type="button" class="' +
+      (ui.view === "calendar" ? "active" : "") +
+      '" data-action="view" data-view="calendar">Calendar</button>' +
+      '<button type="button" class="' +
+      (ui.view === "displays" ? "active" : "") +
+      '" data-action="view" data-view="displays">Room screens</button>' +
+      (u.role === "admin"
+        ? '<button type="button" class="' +
+          (ui.view === "admin" ? "active" : "") +
+          '" data-action="view" data-view="admin">Admin</button>'
+        : "") +
+      "</div>";
+    return (
+      '<div class="topbar">' +
+      renderLogo() +
+      nav +
+      '<div class="who"><b>' +
+      esc(u.name) +
+      "</b><span>" +
+      esc(u.company) +
+      " · " +
+      esc(u.role) +
+      "</span></div>" +
+      '<div class="avatar">' +
+      esc(initials(u.name)) +
+      "</div>" +
+      '<button class="btn btn-ghost" type="button" data-action="logout">Sign out</button>' +
+      "</div>"
+    );
+  }
+
   function renderAuth() {
     var login = ui.authMode === "login";
     return (
+      renderTopbar(null) +
       '<div class="auth-shell">' +
       '<div class="auth-brand">' +
       "<h1>MB Rooms</h1>" +
       "<p>A Google Calendar–style room booking prototype. External visitors register with company, name and email. Administrators approve access before anyone can book.</p>" +
       '<div class="mini-cal">' +
       '<div class="mini-cal-head"><span>Room</span><span>Today · 08:00 — 18:00</span></div>' +
-      '<div class="mini-cal-row"><div class="mini-room">Room 101</div><div class="mini-track">' +
+      '<div class="mini-cal-row"><div class="mini-room">291-2-2013</div><div class="mini-track">' +
       '<div class="mini-evt evt-mine" style="left:72px;width:108px">Workshop</div>' +
       '<div class="mini-evt evt-busy" style="left:216px;width:72px">Busy</div>' +
       "</div></div>" +
-      '<div class="mini-cal-row"><div class="mini-room">Room 102</div><div class="mini-track">' +
+      '<div class="mini-cal-row"><div class="mini-room">291-01-1013</div><div class="mini-track">' +
       '<div class="mini-evt evt-mine" style="left:288px;width:72px">Interview</div>' +
       "</div></div>" +
-      '<div class="mini-cal-row"><div class="mini-room">Boardroom A</div><div class="mini-track">' +
+      '<div class="mini-cal-row"><div class="mini-room">291-2-2014</div><div class="mini-track">' +
       '<div class="mini-evt evt-busy" style="left:36px;width:72px">Busy</div>' +
       "</div></div>" +
       "</div>" +
@@ -449,6 +513,7 @@
     var u = me();
     var ok = kind === "pending";
     return (
+      renderTopbar(null) +
       '<div class="auth-shell"><div class="auth-brand"><h1>MB Rooms</h1></div><div class="auth-panel">' +
       "<h2>" +
       (ok ? "Waiting for approval" : "Registration declined") +
@@ -474,6 +539,7 @@
   function renderSetPassword() {
     var u = me();
     return (
+      renderTopbar(null) +
       '<div class="auth-shell"><div class="auth-brand"><h1>MB Rooms</h1><p>Access approved. Create a password to start booking rooms.</p></div><div class="auth-panel">' +
       "<h2>Create your password</h2>" +
       '<p class="sub">Welcome, ' +
@@ -492,37 +558,8 @@
   }
 
   function renderShell(u) {
-    var nav =
-      '<div class="nav">' +
-      '<button type="button" class="' +
-      (ui.view === "calendar" ? "active" : "") +
-      '" data-action="view" data-view="calendar">Calendar</button>' +
-      '<button type="button" class="' +
-      (ui.view === "displays" ? "active" : "") +
-      '" data-action="view" data-view="displays">Room screens</button>' +
-      (u.role === "admin"
-        ? '<button type="button" class="' +
-          (ui.view === "admin" ? "active" : "") +
-          '" data-action="view" data-view="admin">Admin</button>'
-        : "") +
-      "</div>";
-
     return (
-      '<div class="topbar">' +
-      '<div class="logo"><span class="mark"></span><strong>MB Rooms</strong></div>' +
-      nav +
-      '<div class="who"><b>' +
-      esc(u.name) +
-      "</b><span>" +
-      esc(u.company) +
-      " · " +
-      esc(u.role) +
-      '</span></div>' +
-      '<div class="avatar">' +
-      esc(initials(u.name)) +
-      "</div>" +
-      '<button class="btn btn-ghost" type="button" data-action="logout">Sign out</button>' +
-      "</div>" +
+      renderTopbar(u) +
       (ui.view === "calendar" ? renderCalendar(u) : "") +
       (ui.view === "admin" && u.role === "admin" ? renderAdmin() : "") +
       (ui.view === "displays" ? renderDisplays() : "") +
@@ -546,66 +583,73 @@
       hours += '<div class="hour">' + pad(i) + ":00</div>";
     }
 
-    var rows = db.rooms
-      .map(function (room) {
-        var events = db.bookings
-          .filter(function (b) {
-            return b.roomId === room.id && dateOf(b.start) === ui.date;
-          })
-          .map(function (b) {
-            var mine = b.userId === u.id;
-            var admin = u.role === "admin";
-            var left = ((minsOf(b.start) - DAY_START) / SLOT) * SLOT_W;
-            var width = ((minsOf(b.end) - minsOf(b.start)) / SLOT) * SLOT_W;
-            var title = mine || admin ? b.title : "Busy";
-            var sub = mine || admin ? fmtRange(b.start, b.end) : fmtRange(b.start, b.end);
-            return (
-              '<button type="button" class="evt ' +
-              (mine ? "evt-mine" : "evt-busy") +
-              '" style="left:' +
-              left +
-              "px;width:" +
-              Math.max(width - 4, 24) +
-              'px" data-action="open-booking" data-id="' +
-              b.id +
-              '"><b>' +
-              esc(title) +
-              "</b><span>" +
-              esc(sub) +
-              "</span></button>"
-            );
-          })
-          .join("");
+    function roomRow(room) {
+      var events = db.bookings
+        .filter(function (b) {
+          return b.roomId === room.id && dateOf(b.start) === ui.date;
+        })
+        .map(function (b) {
+          var mine = b.userId === u.id;
+          var admin = u.role === "admin";
+          var left = ((minsOf(b.start) - DAY_START) / SLOT) * SLOT_W;
+          var width = ((minsOf(b.end) - minsOf(b.start)) / SLOT) * SLOT_W;
+          var title = mine || admin ? b.title : "Busy";
+          var sub = fmtRange(b.start, b.end);
+          return (
+            '<button type="button" class="evt ' +
+            (mine ? "evt-mine" : "evt-busy") +
+            '" style="left:' +
+            left +
+            "px;width:" +
+            Math.max(width - 4, 24) +
+            'px" data-action="open-booking" data-id="' +
+            b.id +
+            '"><b>' +
+            esc(title) +
+            "</b><span>" +
+            esc(sub) +
+            "</span></button>"
+          );
+        })
+        .join("");
 
-        var slots = "";
-        for (i = 0; i < SLOT_COUNT; i++) {
-          slots +=
-            '<button class="slot" type="button" data-action="new-booking" data-room="' +
-            room.id +
-            '" data-mins="' +
-            (DAY_START + i * SLOT) +
-            '" title="Book ' +
-            esc(room.name) +
-            '"></button>';
-        }
-
-        return (
-          '<div class="cal-row">' +
-          '<div class="room-cell"><b>' +
+      var slots = "";
+      for (i = 0; i < SLOT_COUNT; i++) {
+        slots +=
+          '<button class="slot" type="button" data-action="new-booking" data-room="' +
+          room.id +
+          '" data-mins="' +
+          (DAY_START + i * SLOT) +
+          '" title="Book ' +
           esc(room.name) +
-          "</b><small>" +
-          esc(room.email) +
-          "<br>" +
-          esc(room.location) +
-          " · " +
-          room.capacity +
-          " people</small></div>" +
-          '<div class="track" style="width:' +
+          '"></button>';
+      }
+
+      return (
+        '<div class="cal-row">' +
+        '<div class="room-cell"><b>' +
+        esc(room.name) +
+        "</b><small>" +
+        esc(room.email) +
+        "</small></div>" +
+        '<div class="track" style="width:' +
+        SLOT_COUNT * SLOT_W +
+        'px">' +
+        slots +
+        events +
+        "</div></div>"
+      );
+    }
+
+    var rows = roomsGrouped()
+      .map(function (g) {
+        return (
+          '<div class="cal-level"><div class="room-cell level-label">' +
+          esc(g.level) +
+          '</div><div class="level-fill" style="width:' +
           SLOT_COUNT * SLOT_W +
-          'px">' +
-          slots +
-          events +
-          "</div></div>"
+          'px"></div></div>' +
+          g.rooms.map(roomRow).join("")
         );
       })
       .join("");
